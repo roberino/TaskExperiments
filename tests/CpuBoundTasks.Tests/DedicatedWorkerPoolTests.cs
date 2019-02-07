@@ -4,12 +4,12 @@ using Xunit;
 
 namespace CpuBoundTasks.Tests
 {
-    public class WorkerPoolTests
+    public class DedicatedWorkerPoolTests
     {
         [Fact]
         public async Task EnqueueWorkAsync_SomeWork()
         {
-            using (var workerPool = new WorkerPool(4))
+            using (var workerPool = new DedicatedWorkerPool(4))
             {
                 var result1 = await workerPool.EnqueueWorkAsync(() => new Data() {Value = 1});
                 var result2 = await workerPool.EnqueueWorkAsync(() => new Data() {Value = 2});
@@ -26,7 +26,7 @@ namespace CpuBoundTasks.Tests
         {
             const int taskCount = 50;
 
-            using (var workerPool = new WorkerPool(4))
+            using (var workerPool = new DedicatedWorkerPool(4))
             {
                 var tasks = Enumerable
                     .Range(1, taskCount).Select(n => workerPool.EnqueueWorkAsync(() => new Data() { Value = n }))
@@ -35,6 +35,13 @@ namespace CpuBoundTasks.Tests
                 var results = await Task.WhenAll(tasks);
 
                 Assert.Equal(taskCount, results.Length);
+
+                Assert.Equal(taskCount,
+                    Enumerable
+                        .Range(1, taskCount)
+                        .Join(results, o => o, i => i.Value, (o, i) => (i, o))
+                        .Count());
+
             }
         }
     }

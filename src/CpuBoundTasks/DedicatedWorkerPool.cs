@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CpuBoundTasks
 {
-    public sealed class WorkerPool : IWorkOrchestrator
+    public sealed class DedicatedWorkerPool : IWorkOrchestrator
     {
         readonly Thread[] _workerThreads;
         readonly WorkQueue<(Func<object> work, TaskCompletionSource<object> task, CancellationToken cancellationToken)> _work;
@@ -13,7 +13,7 @@ namespace CpuBoundTasks
 
         int _activeThreads;
 
-        public WorkerPool(int size)
+        public DedicatedWorkerPool(int size)
         {
             _work = new WorkQueue<(Func<object> work, TaskCompletionSource<object> task, CancellationToken cancellationToken)>();
             _disposed = new CancellationTokenSource();
