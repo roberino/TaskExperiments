@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CpuBoundTasks\CpuBoundTasks.csproj" />
+    <ProjectReference Include="..\..\src\CpuBoundTasks\CpuBoundTasks.csproj" />
   </ItemGroup>
 
 </Project>
