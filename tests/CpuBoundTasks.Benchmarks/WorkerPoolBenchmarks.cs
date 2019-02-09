@@ -26,7 +26,7 @@ namespace CpuBoundTasks.Benchmarks
         {
             _workOrchestrators = new Dictionary<ExecutionStrategy, IWorkOrchestrator>
             {
-                [ExecutionStrategy.Dedicated] = new DedicatedWorkerPool(4),
+                [ExecutionStrategy.Dedicated] = new DedicatedWorkerPoolV2(4),
                 [ExecutionStrategy.GlobalThreadPool] = new GlobalWorkerPool(),
                 [ExecutionStrategy.Inline] = new InlineWorkOrchestrator()
             };
