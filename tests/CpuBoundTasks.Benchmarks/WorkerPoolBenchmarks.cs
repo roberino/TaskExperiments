@@ -1,35 +1,65 @@
 ﻿using BenchmarkDotNet.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CpuBoundTasks.Benchmarks
 {
-    public class WorkerPoolBenchmarks
+    [CoreJob]
+    [RankColumn, MarkdownExporter]
+    public class WorkerPoolBenchmarks : IDisposable
     {
-        DedicatedWorkerPool _workerPool;
+        IDictionary<ExecutionStrategy, IWorkOrchestrator> _workOrchestrators;
 
-        [Params(1, 5, 10)]
-        public int WorkPoolSize { get; set; }
-
-        [Params(5, 100)]
+        [Params(50, 100, 500)]
         public int Iterations { get; set; }
 
-        [Params(5, 10)]
+        [Params(4, 8)]
         public int ParallelOperations { get; set; }
 
-        [IterationSetup]
+        [Params(ExecutionStrategy.Inline, ExecutionStrategy.Dedicated, ExecutionStrategy.GlobalThreadPool)]
+        public ExecutionStrategy ExecutionStrategy { get; set; }
+
+        [GlobalSetup]
         public void Setup()
         {
-            _workerPool = new DedicatedWorkerPool(WorkPoolSize);
+            _workOrchestrators = new Dictionary<ExecutionStrategy, IWorkOrchestrator>
+            {
+                [ExecutionStrategy.Dedicated] = new DedicatedWorkerPool(4),
+                [ExecutionStrategy.GlobalThreadPool] = new GlobalWorkerPool(),
+                [ExecutionStrategy.Inline] = new InlineWorkOrchestrator()
+            };
         }
 
         [Benchmark]
         public void EnqueueWorkAsync()
         {
-            var tasks = Enumerable.Range(1, ParallelOperations)
-                .Select(n => _workerPool.EnqueueWorkAsync(() => Fibonacci(Iterations)));
+            var workerPool = _workOrchestrators[ExecutionStrategy];
 
-            Task.WhenAll(tasks).Wait();
+            var tasks = Enumerable.Range(1, ParallelOperations)
+                .Select(n => workerPool.EnqueueWorkAsync(() => Fibonacci(Iterations)));
+
+            Task.WhenAll(tasks)
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        [GlobalCleanup]
+        public void Cleanup()
+        {
+            if (_workOrchestrators == null)
+            {
+                return;
+            }
+
+            foreach (var keyValuePair in _workOrchestrators)
+            {
+                keyValuePair.Value.Dispose();
+            }
+
+            _workOrchestrators = null;
         }
 
         static int Fibonacci(int iterations)
@@ -44,6 +74,11 @@ namespace CpuBoundTasks.Benchmarks
             }
 
             return n2;
+        }
+
+        public void Dispose()
+        {
+            Cleanup();
         }
     }
 }

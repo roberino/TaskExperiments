@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CpuBoundTasks
 {
-    public sealed class DefaultWorkerPool : IWorkOrchestrator
+    public sealed class GlobalWorkerPool : IWorkOrchestrator
     {
         public Task<T> EnqueueWorkAsync<T>(Func<T> work, CancellationToken cancellationToken = default)
         {

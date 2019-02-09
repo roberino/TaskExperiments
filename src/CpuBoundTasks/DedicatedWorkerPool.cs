@@ -87,5 +87,10 @@ namespace CpuBoundTasks
         {
             _disposed.Cancel();
         }
+
+        ~DedicatedWorkerPool()
+        {
+            Dispose();
+        }
     }
 }

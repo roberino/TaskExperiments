@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>CpuBoundTasks.Benchmarks.WorkerPoolBenchmarks</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.11.3, OS=Windows 10.0.16299.726 (1709/FallCreatorsUpdate/Redstone3)
+Intel Core i7-8550U CPU 1.80GHz (Kaby Lake R), 1 CPU, 8 logical and 4 physical cores
+Frequency=1945313 Hz, Resolution=514.0561 ns, Timer=TSC
+.NET Core SDK=2.2.103
+  [Host] : .NET Core 2.2.1 (CoreCLR 4.6.27207.03, CoreFX 4.6.27207.03), 64bit RyuJIT
+  Core   : .NET Core 2.2.1 (CoreCLR 4.6.27207.03, CoreFX 4.6.27207.03), 64bit RyuJIT
+</code></pre>
+<pre><code>Job=Core  Runtime=Core  
+</code></pre>
+
+<table>
+<thead><tr><th>    Method</th><th>Iterations</th><th>ParallelOperations</th><th>ExecutionStrategy</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Rank</th>
+</tr>
+</thead><tbody><tr><td>EnqueueWorkAsync</td><td>50</td><td>4</td><td>Dedicated</td><td>19.007 us</td><td>0.3695 us</td><td>0.5058 us</td><td>18.995 us</td><td>12</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>50</td><td>4</td><td>GlobalThreadPool</td><td>6.812 us</td><td>0.1318 us</td><td>0.1619 us</td><td>6.861 us</td><td>7</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>50</td><td>4</td><td>Inline</td><td>1.336 us</td><td>0.0291 us</td><td>0.0853 us</td><td>1.343 us</td><td>2</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>50</td><td>8</td><td>Dedicated</td><td>35.483 us</td><td>0.7386 us</td><td>1.6367 us</td><td>35.461 us</td><td>14</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>50</td><td>8</td><td>GlobalThreadPool</td><td>12.131 us</td><td>0.2398 us</td><td>0.3515 us</td><td>12.178 us</td><td>10</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>50</td><td>8</td><td>Inline</td><td>2.134 us</td><td>0.0538 us</td><td>0.1587 us</td><td>2.163 us</td><td>4</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>100</td><td>4</td><td>Dedicated</td><td>18.819 us</td><td>0.3710 us</td><td>0.6095 us</td><td>18.984 us</td><td>12</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>100</td><td>4</td><td>GlobalThreadPool</td><td>6.651 us</td><td>0.1299 us</td><td>0.1904 us</td><td>6.588 us</td><td>7</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>100</td><td>4</td><td>Inline</td><td>1.128 us</td><td>0.0639 us</td><td>0.1885 us</td><td>1.133 us</td><td>1</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>100</td><td>8</td><td>Dedicated</td><td>32.605 us</td><td>0.6489 us</td><td>1.4646 us</td><td>32.624 us</td><td>13</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>100</td><td>8</td><td>GlobalThreadPool</td><td>11.427 us</td><td>0.2259 us</td><td>0.4074 us</td><td>11.400 us</td><td>9</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>100</td><td>8</td><td>Inline</td><td>1.888 us</td><td>0.0918 us</td><td>0.2707 us</td><td>1.792 us</td><td>3</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>500</td><td>4</td><td>Dedicated</td><td>18.280 us</td><td>0.3640 us</td><td>0.6470 us</td><td>18.325 us</td><td>11</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>500</td><td>4</td><td>GlobalThreadPool</td><td>7.006 us</td><td>0.1396 us</td><td>0.2851 us</td><td>7.046 us</td><td>8</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>500</td><td>4</td><td>Inline</td><td>2.217 us</td><td>0.0599 us</td><td>0.1727 us</td><td>2.266 us</td><td>5</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>500</td><td>8</td><td>Dedicated</td><td>32.166 us</td><td>0.6379 us</td><td>1.2441 us</td><td>32.120 us</td><td>13</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>500</td><td>8</td><td>GlobalThreadPool</td><td>11.520 us</td><td>0.2264 us</td><td>0.3720 us</td><td>11.489 us</td><td>9</td>
+</tr><tr><td>EnqueueWorkAsync</td><td>500</td><td>8</td><td>Inline</td><td>4.293 us</td><td>0.1077 us</td><td>0.3001 us</td><td>4.318 us</td><td>6</td>
+</tr></tbody></table>
+</body>
+</html>
